@@ -1,7 +1,38 @@
 // import module
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+
+function templateHTML(title, list, body) {
+  return `
+  <!doctype html>
+  <html>
+  <head>
+    <title>WEB1 - ${title}</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1><a href="/">WEB</a></h1>
+    ${list}
+    ${body}
+  </body>
+  </html>
+  `;
+}
+
+
+function templateList(filelist){
+  let list = '<ul>';
+
+  filelist.forEach(file => {
+    list += `<li><a href = "/?id=${file}">${file}</a></li>`
+  });
+
+  list = list + '</ul>';
+
+  return list;
+}
+
 
 var app = http.createServer(function(request,response){
   console.log(request.url);
@@ -14,59 +45,33 @@ var app = http.createServer(function(request,response){
   if(pathname === '/'){
     // undefined === 없는값
     if (queryData.id === undefined){
-      fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+      fs.readdir('./data', function(error, filelist){
+        console.log(filelist);
+
         let title = 'Welcome';
-        description = "Hello, Node,js"
-        let template = `
-        <!doctype html>
-        <html>
-        <head>
-          <title>WEB1 - ${title}</title>
-          <meta charset="utf-8">
-        </head>
-        <body>
-          <h1><a href="/">WEB</a></h1>
-          <ul>
-            <li><a href="/?id=HTML">HTML</a></li>
-            <li><a href="/?id=CSS">CSS</a></li>
-            <li><a href="/?id=JavaScript">JavaScript</a></li>
-          </ul>
-          <h2>${title}</h2>
-          <p>${description}</p>
-        </body>
-        </html>
-        `;
+        let description = "Hello, Node,js"
+        let list = templateList(filelist);
+        let template = templateHTML(title, list,`<h2>${title}</h2>${description}`);
 
         response.writeHead(200);
         response.end(template);
       });
     } else {
-      fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
-        let title = 'queryData.id';
-        let template = `
-        <!doctype html>
-        <html>
-        <head>
-          <title>WEB1 - ${title}</title>
-          <meta charset="utf-8">
-        </head>
-        <body>
-          <h1><a href="/">WEB</a></h1>
-          <ul>
-            <li><a href="/?id=HTML">HTML</a></li>
-            <li><a href="/?id=CSS">CSS</a></li>
-            <li><a href="/?id=JavaScript">JavaScript</a></li>
-          </ul>
-          <h2>${title}</h2>
-          <p>${description}</p>
-        </body>
-        </html>
-        `;
-        //console.log(__dirname + _url);
-        // 사용자에게 데이터 전송
-        //response.end(fs.readFileSync(__dirname + _url));
-        response.writeHead(200);
-        response.end(template);
+      // read dir
+      fs.readdir('./data', function(error, filelist){
+        // read file
+        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+          let title = queryData.id;
+          let list = templateList(filelist);
+          let template = templateHTML(title, list,`<h2>${title}</h2>${description}`);
+
+          //console.log(__dirname + _url);
+          // 사용자에게 데이터 전송
+          //response.end(fs.readFileSync(__dirname + _url));
+
+          response.writeHead(200);
+          response.end(template);
+        });
       });
     }
   } else {
@@ -77,4 +82,5 @@ var app = http.createServer(function(request,response){
 
 
 });
+
 app.listen(3000);
