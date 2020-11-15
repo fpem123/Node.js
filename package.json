@@ -1,0 +1,25 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "- 오픈튜토리얼스-생활코딩의 Node.js 튜토리얼 클론코딩 저장소\r  - 출처: https://opentutorials.org/course/3332",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpem123/Node.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fpem123/Node.js/issues"
+  },
+  "homepage": "https://github.com/fpem123/Node.js#readme",
+  "dependencies": {
+    "sanitize-html": "^2.1.2"
+  }
+}
